@@ -30,7 +30,7 @@ jobs:
     - name: Build Wesnoth APK
       run: |
         cd packaging/android
-        ./gradlew assembleDebug --no-daemon --stacktrace
+        ./gradlew clean assembleDebug --no-daemon --stacktrace
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
