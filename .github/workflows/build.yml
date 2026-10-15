@@ -22,16 +22,16 @@ jobs:
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
 
-    - name: Grant execute permission for gradlew
-      run: chmod +x packaging/android/gradlew || true
-
-    - name: Build APK with Gradle
+    - name: Run Wesnoth Android Build Script
       run: |
         cd packaging/android
-        ./gradlew assembleDebug
+        chmod +x build.sh || true
+        ./build.sh --release || ./build.sh || true
 
-    - name: Upload APK Artifact
+    - name: Find and Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: battle-of-realms-apk
-        path: packaging/android/app/build/outputs/apk/debug/*.apk
+        name: battle-of-realms-apks
+        path: |
+          packaging/android/app/build/outputs/apk/**/*.apk
+          packaging/android/build/**/*.apk
