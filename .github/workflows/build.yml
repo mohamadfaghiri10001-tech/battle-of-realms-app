@@ -19,19 +19,21 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    - name: Setup Android SDK
-      uses: android-actions/setup-android@v3
+    - name: Accept Android Licenses
+      run: |
+        yes | sdkmanager --licenses || true
 
-    - name: Run Wesnoth Android Build Script
+    - name: Grant execute permission for gradlew
+      run: |
+        chmod +x packaging/android/gradlew || true
+
+    - name: Build Wesnoth APK
       run: |
         cd packaging/android
-        chmod +x build.sh || true
-        ./build.sh --release || ./build.sh || true
+        ./gradlew assembleDebug --no-daemon --stacktrace
 
-    - name: Find and Upload APK Artifact
+    - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
-        name: battle-of-realms-apks
-        path: |
-          packaging/android/app/build/outputs/apk/**/*.apk
-          packaging/android/build/**/*.apk
+        name: battle-of-realms-debug-apk
+        path: packaging/android/app/build/outputs/apk/debug/*.apk
